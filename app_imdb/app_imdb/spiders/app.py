@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt 
 
 # Fonction pour charger les données :
 @st.cache
@@ -15,8 +16,9 @@ def load_data(nrows):
 # Import du CSV 
 imdb = pd.read_csv("datafram.csv")
 
-#Déclaration de mes variables : 
+## --------------  ## -----------------------Déclaration de mes variables : 
 
+# I Convert my Datafram title colomn to list 
 list_movies = imdb['title'].tolist()
 
 # I convert my Datafram actors colomn to list 
@@ -45,56 +47,62 @@ for i in imdb["Origin language"]:
 
 # For my slide bar duration between 60min and 400min 
 time = [i for i in range (60,400, 30)] 
+score = [i for i in range(11)]
 
 
-#Titre de la page
+# Titre de la page
 st.title('Make your movie:')
 st.sidebar.subheader('Filters :')
 st.subheader('Movies explorer:')
 
 
-# Creation de mes inputs et des filtres :
-data_container = st.container()
-with data_container :
-    checkmovie = st.sidebar.checkbox("Filters")
-    if checkmovie :
-        duration = st.sidebar.select_slider("By duration", time )
-        movie = st.sidebar.multiselect("List of movies", set(list_movies))
-        choose_actors = st.sidebar.multiselect('Select your actors',set(list_actors))
-        country = st.sidebar.multiselect("Country", set(list_country))
-        category = st.sidebar.multiselect('Category',set(list_category))
-        language = st.sidebar.multiselect('Language', set(list_language))
+## --------------  ## ----------------------- Déclaaration des inputs :
+# Creation des inputs 
 
-        st.write("By Duration" ,imdb[imdb['duration by min'] <= duration])
-        st.write( "By movies", imdb[imdb["title"].isin(movie)])
-        st.write("By actors" , imdb[imdb['actors'].isin(choose_actors)])
-        st.write("By Country" , imdb[imdb['Origin country'].isin(country)])
-        st.write("By Category" , imdb[imdb['genre'].isin(category)])
-        st.write("By language", imdb[imdb['Origin language'].isin(language)])
+checkmovie = st.sidebar.checkbox("Filters")
+if checkmovie :
+    duration = st.sidebar.select_slider("By duration", time )
+    movie = st.sidebar.multiselect("List of movies", set(list_movies))
+    choose_actors = st.sidebar.multiselect('Select your actors',set(list_actors))
+    country = st.sidebar.multiselect("Country", set(list_country))
+    category = st.sidebar.multiselect('Category',set(list_category))
+    language = st.sidebar.multiselect('Language', set(list_language))
+    note = st.sidebar.select_slider('By score', score )
 
+# Creation des Df avec les différents filtres ( Par Durée, par films, par acteurs, par pays, par langue ou par catégorie)
+    st.write("By Duration" ,imdb[imdb['duration by min'] <= duration ])
+    st.write( "By movies", imdb[imdb["title"].isin(movie)])
+    st.write("By actors" , imdb[imdb['actors'].isin(choose_actors)])
+    st.write("By Country" , imdb[imdb['Origin country'].isin(country)])
+    st.write("By Category" , imdb[imdb['genre'].isin(category)])
+    st.write("By language", imdb[imdb['Origin language'].isin(language)])
+    st.write("By score ", imdb[imdb['note'] <= int(note) ])
+
+# si le checkbox est sur all alors Datafram complet 
 all = st.sidebar.checkbox("All")
 if all :
     st.write( "Our all Liberary below! ",imdb)
 
-
-
-# Mes fonctions de tri dans un containers : 
-    # if choose_actor :
-    #     st.write(imdb[imdb['actors'].isin(choose_actor)])
-
-
-    # # Filtre par durée de films : 
-    # if duration :
-    #     data = st.write(imdb[imdb['duration by min'] <= duration])
-
-
-
-
-
-
-
+modelisation = st.sidebar.checkbox("Modelisation")
+if modelisation : 
+    st.subheader("Movies duration by cost :")
+    fig, ax = plt.subplots()
+    ax.scatter(list(imdb['duration by min']), imdb['movie cost'])
+    st.pyplot(fig)
+    st.subheader("Movie price by movie score :")
+    fig, ax = plt.subplots()
+    ax.scatter(list(imdb['note']), imdb['movie cost'])
+    st.pyplot(fig)
+    fig, ax = plt.subplots()
+    st.subheader("Just training:")
+    ax.plot(list(imdb['duration by min']), imdb['movie cost'])
+    st.pyplot(fig)    
 #Markdown 
 st.markdown(
 
     " ###### Made by Ayoub "
 )
+
+# data_container = st.container()
+# with data_container :
+# A utiliser pour faire un seul Datafram filtrable avec les conditions ? 
