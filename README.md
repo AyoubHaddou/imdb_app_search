@@ -1,9 +1,9 @@
-# imdb_app_search
+# Scraping 
 
 [clic-ici](https://github.com/AyoubHaddou/imdb_app_search/blob/main/app_imdb/app_imdb/spiders/mydiv.py) pour voir le fichier principal 
+le site scrapé : https://www.imdb.com/chart/top/?ref_=nv_mv_250
 
-# Le site scrapé : 
-https://www.imdb.com/chart/top/?ref_=nv_mv_250
+# Mon application
 
-# lien vers mon application
-http://makermovie.herokuapp.com/ 
+repo : https://github.com/AyoubHaddou/makermovie
+site : http://makermovie.herokuapp.com/ 
